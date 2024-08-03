@@ -1,0 +1,22 @@
+{
+  "name": "js-formatter-chatgpt-telegram",
+  "version": "1.0.0",
+  "description": "A package for converting ChatGPT Markdown to HTML for Telegram",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "chatgpt",
+    "markdown",
+    "html",
+    "telegram",
+    "formatter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/testnet-del/js-formatter-chatgpt-telegram",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

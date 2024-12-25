@@ -14,7 +14,7 @@ const ensureClosingDelimiters = (text) => {
     return text;
 };
 
-const extractAndConvertCodeBlocks = (text) => {
+const extractAndConvertCodeBlocks = (text,ignoreMarkdownBlock=false) => {
     /**
      * Extracts code blocks from the text, converting them to HTML <pre><code> format,
      * and replaces them with placeholders. Also ensures closing delimiters for unmatched blocks.
@@ -24,14 +24,18 @@ const extractAndConvertCodeBlocks = (text) => {
     const placeholders = [];
     const codeBlocks = {};
 
-    const replacer = (match, language, newline, codeContent) => {
+    const replacer = (match, language, newline, codeContent,ignoreMarkdown) => {
         const placeholder = `CODEBLOCKPLACEHOLDER${placeholders.length}`;
         placeholders.push(placeholder);
         let htmlCodeBlock;
         if (!language) {
             htmlCodeBlock = `<pre><code>${codeContent}</code></pre>`;
         } else {
-            htmlCodeBlock = `<pre><code class="language-${language}">${codeContent}</code></pre>`;
+            if(language.toLowerCase()=='markdown' && ignoreMarkdown){
+                htmlCodeBlock = codeContent;
+            }else{
+                htmlCodeBlock = `<pre><code class="language-${language}">${codeContent}</code></pre>`;
+            }
         }
         return [placeholder, htmlCodeBlock];
     };
@@ -41,7 +45,7 @@ const extractAndConvertCodeBlocks = (text) => {
     let match;
     while ((match = codeBlockRegex.exec(text)) !== null) {
         const [fullMatch, language, newline, codeContent] = match;
-        const [placeholder, htmlCodeBlock] = replacer(match, language, newline, codeContent);
+        const [placeholder, htmlCodeBlock] = replacer(match, language, newline, codeContent,ignoreMarkdownBlock);
         codeBlocks[placeholder] = htmlCodeBlock;
         modifiedText = modifiedText.replace(fullMatch, placeholder);
     }

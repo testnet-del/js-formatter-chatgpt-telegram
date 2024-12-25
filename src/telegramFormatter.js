@@ -3,7 +3,7 @@ const { extractAndConvertCodeBlocks, reinsertCodeBlocks } = require('./extractor
 const { combineBlockquotes } = require('./formatters');
 const { removeBlockquoteEscaping } = require('./helpers');
 
-function telegramFormat(text) {
+function telegramFormat(text,ignoreMarkdownBlock=false) {
     /**
      * Converts markdown in the provided text to HTML supported by Telegram.
      */
@@ -15,7 +15,7 @@ function telegramFormat(text) {
     text = convertHtmlChars(text);
 
     // Step 2: Extract and convert code blocks first
-    let [ output, codeBlocks ] = extractAndConvertCodeBlocks(text);
+    let [ output, codeBlocks ] = extractAndConvertCodeBlocks(text,ignoreMarkdownBlock);
 
     // Step 3: Escape HTML special characters in the output text
     output = output.replace(/</g, "&lt;").replace(/>/g, "&gt;");

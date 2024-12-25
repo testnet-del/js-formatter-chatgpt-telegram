@@ -31,11 +31,7 @@ const extractAndConvertCodeBlocks = (text,ignoreMarkdownBlock=false) => {
         if (!language) {
             htmlCodeBlock = `<pre><code>${codeContent}</code></pre>`;
         } else {
-            if(language.toLowerCase()=='markdown' && ignoreMarkdown){
-                htmlCodeBlock = codeContent;
-            }else{
-                htmlCodeBlock = `<pre><code class="language-${language}">${codeContent}</code></pre>`;
-            }
+            htmlCodeBlock = `<pre><code class="language-${language}">${codeContent}</code></pre>`;
         }
         return [placeholder, htmlCodeBlock];
     };
@@ -45,9 +41,14 @@ const extractAndConvertCodeBlocks = (text,ignoreMarkdownBlock=false) => {
     let match;
     while ((match = codeBlockRegex.exec(text)) !== null) {
         const [fullMatch, language, newline, codeContent] = match;
-        const [placeholder, htmlCodeBlock] = replacer(match, language, newline, codeContent,ignoreMarkdownBlock);
-        codeBlocks[placeholder] = htmlCodeBlock;
-        modifiedText = modifiedText.replace(fullMatch, placeholder);
+        if(language.toLowerCase()=='markdown' && ignoreMarkdownBlock){
+            modifiedText = modifiedText.replace(fullMatch, codeContent);
+        }else{
+            const [placeholder, htmlCodeBlock] = replacer(match, language, newline, codeContent);
+            codeBlocks[placeholder] = htmlCodeBlock;
+            modifiedText = modifiedText.replace(fullMatch, placeholder);
+        }
+        
     }
 
     return [modifiedText, codeBlocks];

@@ -41,7 +41,7 @@ const extractAndConvertCodeBlocks = (text,ignoreMarkdownBlock=false) => {
     let match;
     while ((match = codeBlockRegex.exec(text)) !== null) {
         const [fullMatch, language, newline, codeContent] = match;
-        if(language.toLowerCase()=='markdown' && ignoreMarkdownBlock){
+        if(language && language.toLowerCase()=='markdown' && ignoreMarkdownBlock){
             modifiedText = modifiedText.replace(fullMatch, codeContent);
         }else{
             const [placeholder, htmlCodeBlock] = replacer(match, language, newline, codeContent);
